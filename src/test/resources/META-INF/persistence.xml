@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+             xmlns='http://xmlns.jcp.org/xml/ns/persistence'
+             xsi:schemaLocation='http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd'
+             version='2.2'>
+  <persistence-unit name="testPU" transaction-type="RESOURCE_LOCAL">
+    <provider>${persistence.provider}</provider>
+    <class>com.github.onacit.persistence.Foo</class>
+    <class>com.github.onacit.persistence.FooProperty</class>
+    <class>com.github.onacit.persistence.OwnedProperty</class>
+    <class>com.github.onacit.persistence.Property</class>
+    <class>com.github.onacit.persistence.SystemProperty</class>
+    <class>com.github.onacit.persistence.UnownedProperty</class>
+    <exclude-unlisted-classes>false</exclude-unlisted-classes>
+    <validation-mode>CALLBACK</validation-mode>
+    <properties>
+      <property name="javax.persistence.jdbc.driver" value="${jdbc.driver}"/>
+      <property name="javax.persistence.jdbc.url" value="${jdbc.url}"/>
+      <property name="javax.persistence.jdbc.user" value="${jdbc.user}"/>
+      <property name="javax.persistence.jdbc.password" value="${jdbc.password}"/>
+      <property name="javax.persistence.schema-generation.database.action" value="create"/>
+      <property name="eclipselink.logging.level" value="FINE"/>
+      <property name="eclipselink.logging.parameters" value="true"/>
+      <property name="hibernate.show_sql" value="true"/>
+      <property name="hibernate.format_sql" value="true"/>
+      <property name="hibernate.use_sql_comments" value="true"/>
+    </properties>
+  </persistence-unit>
+</persistence>
