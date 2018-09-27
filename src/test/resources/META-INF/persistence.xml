@@ -5,6 +5,8 @@
              version='2.2'>
   <persistence-unit name="testPU" transaction-type="RESOURCE_LOCAL">
     <provider>${persistence.provider}</provider>
+    <class>com.github.onacit.persistence.Bar</class>
+    <class>com.github.onacit.persistence.BarProperty</class>
     <class>com.github.onacit.persistence.Foo</class>
     <class>com.github.onacit.persistence.FooProperty</class>
     <class>com.github.onacit.persistence.OwnedProperty</class>

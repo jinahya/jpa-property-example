@@ -8,7 +8,11 @@ import javax.validation.constraints.Size;
 @Table(name = Property.TABLE_NAME,
        indexes = {
                @Index(columnList = Property.COLUMN_NAME_DTYPE + ", " + Property.COLUMN_NAME_KEY,
-                      name = "INDEXED_DTYPE_KEY")
+                      name = "INDEXED_DTYPE_KEY"),
+               @Index(columnList = Property.COLUMN_NAME_DTYPE + ", " + FooProperty.COLUMN_NAME_FOO_ID + ", "
+                       + Property.COLUMN_NAME_KEY, name = "INDEXED_DTYPE_FOO_ID_KEY"),
+               @Index(columnList = Property.COLUMN_NAME_DTYPE + ", " + BarProperty.COLUMN_NAME_BAR_ID + ", "
+                       + Property.COLUMN_NAME_KEY, name = "INDEXED_DTYPE_BAR_ID_KEY")
        }
 )
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -47,9 +51,9 @@ public abstract class Property extends Base {
     @Override
     public String toString() {
         return super.toString() + "{"
-               + "value=" + value
-               + ",key=" + key
-               + "}";
+                + "value=" + value
+                + ",key=" + key
+                + "}";
     }
 
     // ----------------------------------------------------------------------------------------------------------- value

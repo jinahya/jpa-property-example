@@ -167,22 +167,19 @@ public abstract class OwnedProperty<T extends Base> extends Property {
     }
 
     // ----------------------------------------------------------------------------------------------------------- owner
-    public abstract T getOwner();
+    public T getOwner() {
+        return owner;
+    }
 
-    public abstract void setOwner(T owner);
-//    public T getOwner() {
-//        return owner;
-//    }
-//
-//    public void setOwner(final T owner) {
-//        this.owner = owner;
-//    }
+    public void setOwner(final T owner) {
+        this.owner = owner;
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
     @Transient
     protected final Class<T> ownerClass;
 
-//    @NotNull
-//    @ManyToOne//(optional = false)
-//    private T owner;
+    @NotNull
+    @ManyToOne//(optional = false)
+    private T owner;
 }
