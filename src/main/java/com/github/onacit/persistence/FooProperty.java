@@ -10,7 +10,7 @@ import static com.github.onacit.persistence.OwnedProperty.ATTRIBUTE_NAME_OWNER;
 
 @Entity
 @DiscriminatorValue(FooProperty.DISCRIMINATOR_VALUE)
-@AssociationOverride(name = ATTRIBUTE_NAME_OWNER, joinColumns = @JoinColumn(name = COLUMN_NAME_FOO_ID))
+@AssociationOverride(name = ATTRIBUTE_NAME_OWNER, joinColumns = @JoinColumn(name = COLUMN_NAME_FOO_ID, updatable = false))
 public class FooProperty extends OwnedProperty<Foo> {
 
     // -----------------------------------------------------------------------------------------------------------------
