@@ -1,5 +1,6 @@
 package com.github.onacit.persistence;
 
+import io.github.benas.randombeans.api.ObjectGenerationException;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 
@@ -9,13 +10,14 @@ import javax.persistence.PersistenceException;
 import java.lang.reflect.Constructor;
 import java.util.function.*;
 
+import static io.github.benas.randombeans.api.EnhancedRandom.random;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.Objects.requireNonNull;
 import static javax.persistence.Persistence.createEntityManagerFactory;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.slf4j.LoggerFactory.getLogger;
 
-public abstract class BaseTest<T extends Base> {
+public abstract class BaseEntityTest<T extends BaseEntity> {
 
     // -----------------------------------------------------------------------------------------------------------------
     private static final Logger logger = getLogger(lookup().lookupClass());
@@ -87,8 +89,8 @@ public abstract class BaseTest<T extends Base> {
 
     // -----------------------------------------------------------------------------------------------------------------
     @Deprecated
-    static <T extends Base> T persistInstance(final Class<T> entityClass, final EntityManager entityManager,
-                                              final Supplier<T> entitySupplier, final Predicate<T> entityFinder) {
+    static <T extends BaseEntity> T persistInstance(final Class<T> entityClass, final EntityManager entityManager,
+                                                    final Supplier<T> entitySupplier, final Predicate<T> entityFinder) {
         if (true) {
             return persistInstance(entityClass, () -> entityManager, entitySupplier, (m, e) -> entityFinder.test(e));
         }
@@ -104,14 +106,15 @@ public abstract class BaseTest<T extends Base> {
         if (entityFinder == null) {
             throw new NullPointerException("entityFinder is null");
         }
-        while (true) {
-            final T entityInstance = entitySupplier.get();
+        for (T entityInstance; true;) {
+            entityInstance = entitySupplier.get();
             try {
                 entityManager.persist(entityInstance);
                 entityManager.flush();
                 return entityInstance;
             } catch (final PersistenceException pe) {
                 if (entityFinder.test(entityInstance)) {
+                    logger.debug("found existing for {}", entityInstance);
                     continue;
                 }
                 throw pe;
@@ -119,10 +122,10 @@ public abstract class BaseTest<T extends Base> {
         }
     }
 
-    static <T extends Base> T persistInstance(final Class<T> entityClass,
-                                              final Supplier<EntityManager> managerSupplier,
-                                              final Supplier<T> entitySupplier,
-                                              final BiPredicate<EntityManager, T> entityFinder) {
+    static <T extends BaseEntity> T persistInstance(final Class<T> entityClass,
+                                                    final Supplier<EntityManager> managerSupplier,
+                                                    final Supplier<T> entitySupplier,
+                                                    final BiPredicate<EntityManager, T> entityFinder) {
         if (entityClass == null) {
             throw new NullPointerException("entityClass is null");
         }
@@ -151,19 +154,36 @@ public abstract class BaseTest<T extends Base> {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    BaseTest(final Class<T> entityClass) {
+
+    /**
+     * Creates a new instance for testing specified entity class.
+     *
+     * @param entityClass the entity class to test.
+     */
+    BaseEntityTest(final Class<T> entityClass) {
         super();
         this.entityClass = requireNonNull(entityClass, "entityClass is null");
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+    Constructor<T> entityConstructor() throws ReflectiveOperationException {
+        if (entityConstructor == null) {
+            entityConstructor = entityClass.getDeclaredConstructor();
+            if (entityConstructor.isSynthetic()) {
+                entityConstructor.setAccessible(true);
+            }
+        }
+        return entityConstructor;
+    }
+
     T entityInstance() {
         try {
-            final Constructor<T> constructor = entityClass.getDeclaredConstructor();
-            if (constructor.isAccessible()) {
-                constructor.setAccessible(true);
-            }
-            return constructor.newInstance();
+            return random(entityClass, BaseEntity.ATTRIBUTE_NAME_ID);
+        } catch (final ObjectGenerationException oge) {
+            // don't care
+        }
+        try {
+            return entityConstructor().newInstance();
         } catch (final ReflectiveOperationException roe) {
             throw new RuntimeException(roe);
         }
@@ -183,5 +203,7 @@ public abstract class BaseTest<T extends Base> {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    protected final Class<T> entityClass;
+    final Class<T> entityClass;
+
+    private transient Constructor<T> entityConstructor;
 }

@@ -9,7 +9,7 @@ import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.Objects.requireNonNull;
 import static org.slf4j.LoggerFactory.getLogger;
 
-public abstract class OwnedPropertyTest<T extends OwnedProperty<U>, U extends Base> extends PropertyTest<T> {
+public abstract class OwnedPropertyTest<T extends OwnedProperty<U>, U extends BaseEntity> extends PropertyTest<T> {
 
     // -----------------------------------------------------------------------------------------------------------------
     private static final Logger logger = getLogger(lookup().lookupClass());
@@ -39,7 +39,7 @@ public abstract class OwnedPropertyTest<T extends OwnedProperty<U>, U extends Ba
 
     U ownerInstancePersisted() {
         final U ownerInstance = ownerInstance();
-        acceptPersistenceContext(entityManager -> entityManager.persist(ownerInstance));
+        acceptPersistenceContext(m -> m.persist(ownerInstance));
         return ownerInstance;
     }
 
@@ -106,5 +106,5 @@ public abstract class OwnedPropertyTest<T extends OwnedProperty<U>, U extends Ba
 //    }
 
     // -----------------------------------------------------------------------------------------------------------------
-    protected final Class<U> ownerClass;
+    final Class<U> ownerClass;
 }

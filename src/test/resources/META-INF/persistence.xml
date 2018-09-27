@@ -5,13 +5,14 @@
              version='2.2'>
   <persistence-unit name="testPU" transaction-type="RESOURCE_LOCAL">
     <provider>${persistence.provider}</provider>
-    <class>com.github.onacit.persistence.Bar</class>
-    <class>com.github.onacit.persistence.BarProperty</class>
-    <class>com.github.onacit.persistence.Foo</class>
-    <class>com.github.onacit.persistence.FooProperty</class>
+    <class>com.github.onacit.persistence.OBar</class>
+    <class>com.github.onacit.persistence.OBarProperty</class>
+    <class>com.github.onacit.persistence.OFoo</class>
+    <class>com.github.onacit.persistence.OFooProperty</class>
     <class>com.github.onacit.persistence.OwnedProperty</class>
     <class>com.github.onacit.persistence.Property</class>
-    <class>com.github.onacit.persistence.SystemProperty</class>
+    <class>com.github.onacit.persistence.UApplicationProperty</class>
+    <class>com.github.onacit.persistence.USystemProperty</class>
     <class>com.github.onacit.persistence.UnownedProperty</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <validation-mode>CALLBACK</validation-mode>

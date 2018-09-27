@@ -1,26 +1,27 @@
 package com.github.onacit.persistence;
 
 import javax.persistence.*;
-import javax.persistence.criteria.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.CriteriaUpdate;
+import javax.persistence.criteria.Root;
 import javax.validation.constraints.NotNull;
 import java.util.Optional;
-import java.util.function.Function;
 
+import static java.util.Arrays.asList;
 import static java.util.Objects.requireNonNull;
 import static java.util.Optional.ofNullable;
 
 @MappedSuperclass
-public abstract class OwnedProperty<T extends Base> extends Property {
+public abstract class OwnedProperty<T extends BaseEntity> extends Property {
 
     // -----------------------------------------------------------------------------------------------------------------
-    //public static final String PROPERTY_NAME_OWNER = "owner";
-
     public static final String ATTRIBUTE_NAME_OWNER = "owner";
 
     // -----------------------------------------------------------------------------------------------------------------
-    public static <T extends OwnedProperty<U>, U extends Base> Optional<T> find(
-            final Class<T> entityClass, final EntityManager entityManager,
-            final String propertyKey, final Function<Path<T>, Path<U>> ownerMapper, final long ownerId) {
+    public static <T extends OwnedProperty<U>, U extends BaseEntity> Optional<T> find(
+            final Class<T> entityClass, final EntityManager entityManager, final String propertyKey,
+            final long ownerId) {
         if (entityManager == null) {
             throw new NullPointerException("entityManager is null");
         }
@@ -30,16 +31,11 @@ public abstract class OwnedProperty<T extends Base> extends Property {
         if (propertyKey == null) {
             throw new NullPointerException("propertyKey is null");
         }
-        if (ownerMapper == null) {
-            throw new NullPointerException("ownerMapper is null");
-        }
         final CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         final CriteriaQuery<T> criteria = builder.createQuery(entityClass);
         final Root<T> root = criteria.from(entityClass);
         criteria.select(root);
-        //https://stackoverflow.com/q/32328333/330457
-        //https://stackoverflow.com/q/3854687/330457
-        criteria.where(builder.equal(ownerMapper.apply(root).get(Base_.id), ownerId),
+        criteria.where(builder.equal(root.get(OwnedProperty_.owner).get(BaseEntity_.id), ownerId),
                        builder.equal(root.get(Property_.key), propertyKey));
         final TypedQuery<T> typed = entityManager.createQuery(criteria);
         try {
@@ -49,9 +45,9 @@ public abstract class OwnedProperty<T extends Base> extends Property {
         }
     }
 
-    public static <T extends OwnedProperty<U>, U extends Base> Optional<T> find(
-            final Class<T> entityClass, final EntityManager entityManager,
-            final String propertyKey, final Function<Path<T>, Path<U>> ownerMapper, final U ownerInstance) {
+    public static <T extends OwnedProperty<U>, U extends BaseEntity> Optional<T> find(
+            final Class<T> entityClass, final EntityManager entityManager, final String propertyKey,
+            final U ownerInstance) {
         if (ownerInstance == null) {
             throw new NullPointerException("ownerInstance is null");
         }
@@ -59,13 +55,13 @@ public abstract class OwnedProperty<T extends Base> extends Property {
         if (ownerId == null) {
             throw new IllegalArgumentException("ownerInstance.id is null");
         }
-        return find(entityClass, entityManager, propertyKey, ownerMapper, ownerId);
+        return find(entityClass, entityManager, propertyKey, ownerId);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    public static <T extends OwnedProperty<U>, U extends Base> boolean update(
+    public static <T extends OwnedProperty<U>, U extends BaseEntity> boolean update(
             final Class<T> entityClass, final EntityManager entityManager, final String propertyValue,
-            final String propertyKey, final Function<Path<T>, Path<U>> ownerMapper, final long ownerId) {
+            final String propertyKey, final long ownerId) {
         if (entityManager == null) {
             throw new NullPointerException("entityManager is null");
         }
@@ -78,14 +74,11 @@ public abstract class OwnedProperty<T extends Base> extends Property {
         if (propertyKey == null) {
             throw new NullPointerException("propertyKey is null");
         }
-        if (ownerMapper == null) {
-            throw new NullPointerException("ownerMapper is null");
-        }
         final CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         final CriteriaUpdate<T> criteria = builder.createCriteriaUpdate(entityClass);
         final Root<T> root = criteria.from(entityClass);
         criteria.set(Property_.value, propertyValue);
-        criteria.where(builder.equal(ownerMapper.apply(root).get(Base_.id), ownerId),
+        criteria.where(builder.equal(root.get(OwnedProperty_.owner).get(BaseEntity_.id), ownerId),
                        builder.equal(root.get(Property_.key), propertyKey));
         final Query query = entityManager.createQuery(criteria);
         final int updated = query.executeUpdate();
@@ -93,9 +86,9 @@ public abstract class OwnedProperty<T extends Base> extends Property {
         return updated == 1;
     }
 
-    public static <T extends OwnedProperty<U>, U extends Base> boolean update(
+    public static <T extends OwnedProperty<U>, U extends BaseEntity> boolean update(
             final Class<T> entityClass, final EntityManager entityManager, final String propertyValue,
-            final String propertyKey, final Function<Path<T>, Path<U>> ownerMapper, final U ownerInstance) {
+            final String propertyKey, final U ownerInstance) {
         if (ownerInstance == null) {
             throw new NullPointerException("ownerInstance is null");
         }
@@ -103,39 +96,26 @@ public abstract class OwnedProperty<T extends Base> extends Property {
         if (ownerId == null) {
             throw new IllegalArgumentException("ownerInstance.id is null");
         }
-        return update(entityClass, entityManager, propertyValue, propertyKey, ownerMapper, ownerId);
+        return update(entityClass, entityManager, propertyValue, propertyKey, ownerId);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    public static <T extends OwnedProperty<U>, U extends Base> boolean delete(
+    public static <T extends OwnedProperty<U>, U extends BaseEntity> boolean delete(
             final Class<T> entityClass, final EntityManager entityManager, final String propertyKey,
-            final Function<Path<T>, Path<U>> ownerMapper, final long ownerId) {
-        if (entityManager == null) {
-            throw new NullPointerException("entityManager is null");
-        }
-        if (entityClass == null) {
-            throw new NullPointerException("entityClass is null");
-        }
+            final long ownerId) {
         if (propertyKey == null) {
             throw new NullPointerException("propertyKey is null");
         }
-        if (ownerMapper == null) {
-            throw new NullPointerException("ownerMapper is null");
-        }
-        final CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-        final CriteriaDelete<T> criteria = builder.createCriteriaDelete(entityClass);
-        final Root<T> root = criteria.from(entityClass);
-        criteria.where(builder.equal(ownerMapper.apply(root).get(Base_.id), ownerId),
-                       builder.equal(root.get(Property_.key), propertyKey));
-        final Query query = entityManager.createQuery(criteria);
-        final int deleted = query.executeUpdate();
+        final int deleted = delete(entityClass, entityManager,
+                                   (b, p) -> asList(b.equal(p.get(OwnedProperty_.owner).get(BaseEntity_.id), ownerId),
+                                                    b.equal(p.get(Property_.key), propertyKey)));
         assert deleted <= 1;
         return deleted == 1;
     }
 
-    public static <T extends OwnedProperty<U>, U extends Base> boolean delete(
+    public static <T extends OwnedProperty<U>, U extends BaseEntity> boolean delete(
             final Class<T> entityClass, final EntityManager entityManager, final String propertyKey,
-            final Function<Path<T>, Path<U>> ownerMapper, final U ownerInstance) {
+            final U ownerInstance) {
         if (ownerInstance == null) {
             throw new NullPointerException("ownerInstance is null");
         }
@@ -143,10 +123,16 @@ public abstract class OwnedProperty<T extends Base> extends Property {
         if (ownerId == null) {
             throw new IllegalArgumentException("ownerInstance.id is null");
         }
-        return delete(entityClass, entityManager, propertyKey, ownerMapper, ownerId);
+        return delete(entityClass, entityManager, propertyKey, ownerId);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Creates a new instance of given owner class.
+     *
+     * @param ownerClass the owner class.
+     */
     public OwnedProperty(final Class<T> ownerClass) {
         super();
         this.ownerClass = requireNonNull(ownerClass, "ownerClass is null");
@@ -156,9 +142,9 @@ public abstract class OwnedProperty<T extends Base> extends Property {
     @Override
     public String toString() {
         return super.toString() + "{"
-               + "ownerClass=" + ownerClass
-               + ",ownerId=" + ofNullable(getOwner()).map(Base::getId).orElse(null)
-               + "}";
+                + "ownerClass=" + ownerClass
+                + ",ownerId=" + ofNullable(getOwner()).map(BaseEntity::getId).orElse(null)
+                + "}";
     }
 
     // ------------------------------------------------------------------------------------------------------ ownerClass
@@ -177,9 +163,9 @@ public abstract class OwnedProperty<T extends Base> extends Property {
 
     // -----------------------------------------------------------------------------------------------------------------
     @Transient
-    protected final Class<T> ownerClass;
+    final Class<T> ownerClass;
 
     @NotNull
-    @ManyToOne//(optional = false)
+    @ManyToOne//(optional = false) // hibernate
     private T owner;
 }

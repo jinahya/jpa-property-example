@@ -4,8 +4,8 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
 @Entity
-@DiscriminatorValue(SystemProperty.DISCRIMINATOR_VALUE)
-public class SystemProperty extends UnownedProperty {
+@DiscriminatorValue(USystemProperty.DISCRIMINATOR_VALUE)
+public class USystemProperty extends UnownedProperty {
 
     // -----------------------------------------------------------------------------------------------------------------
     public static final String DISCRIMINATOR_VALUE = "SYSTEM";

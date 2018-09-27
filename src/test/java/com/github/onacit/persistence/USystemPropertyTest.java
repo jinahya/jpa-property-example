@@ -1,9 +1,9 @@
 package com.github.onacit.persistence;
 
-public class SystemPropertyTest extends UnownedPropertyTest<SystemProperty> {
+public class USystemPropertyTest extends UnownedPropertyTest<USystemProperty> {
 
     // -----------------------------------------------------------------------------------------------------------------
-    public SystemPropertyTest() {
-        super(SystemProperty.class);
+    public USystemPropertyTest() {
+        super(USystemProperty.class);
     }
 }

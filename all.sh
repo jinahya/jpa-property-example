@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 declare -a provider=("eclipselink" "hibernate-entitymanager")
 declare -a database=("h2" "derby" "hsqldb")
 for persistence in "${provider[@]}"

@@ -5,13 +5,13 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 
-import static com.github.onacit.persistence.BarProperty.COLUMN_NAME_BAR_ID;
+import static com.github.onacit.persistence.OBarProperty.COLUMN_NAME_BAR_ID;
 import static com.github.onacit.persistence.OwnedProperty.ATTRIBUTE_NAME_OWNER;
 
 @Entity
-@DiscriminatorValue(BarProperty.DISCRIMINATOR_VALUE)
+@DiscriminatorValue(OBarProperty.DISCRIMINATOR_VALUE)
 @AssociationOverride(name = ATTRIBUTE_NAME_OWNER, joinColumns = @JoinColumn(name = COLUMN_NAME_BAR_ID, updatable = false))
-public class BarProperty extends OwnedProperty<Bar> {
+public class OBarProperty extends OwnedProperty<OBar> {
 
     // -----------------------------------------------------------------------------------------------------------------
     public static final String DISCRIMINATOR_VALUE = "BAR";
@@ -20,7 +20,7 @@ public class BarProperty extends OwnedProperty<Bar> {
     public static final String COLUMN_NAME_BAR_ID = "BAR_ID";
 
     // -----------------------------------------------------------------------------------------------------------------
-    public BarProperty() {
-        super(Bar.class);
+    public OBarProperty() {
+        super(OBar.class);
     }
 }

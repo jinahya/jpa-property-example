@@ -9,15 +9,15 @@ import javax.validation.constraints.Size;
        indexes = {
                @Index(columnList = Property.COLUMN_NAME_DTYPE + ", " + Property.COLUMN_NAME_KEY,
                       name = "INDEXED_DTYPE_KEY"),
-               @Index(columnList = Property.COLUMN_NAME_DTYPE + ", " + FooProperty.COLUMN_NAME_FOO_ID + ", "
+               @Index(columnList = Property.COLUMN_NAME_DTYPE + ", " + OFooProperty.COLUMN_NAME_FOO_ID + ", "
                        + Property.COLUMN_NAME_KEY, name = "INDEXED_DTYPE_FOO_ID_KEY"),
-               @Index(columnList = Property.COLUMN_NAME_DTYPE + ", " + BarProperty.COLUMN_NAME_BAR_ID + ", "
+               @Index(columnList = Property.COLUMN_NAME_DTYPE + ", " + OBarProperty.COLUMN_NAME_BAR_ID + ", "
                        + Property.COLUMN_NAME_KEY, name = "INDEXED_DTYPE_BAR_ID_KEY")
        }
 )
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = Property.COLUMN_NAME_DTYPE)
-public abstract class Property extends Base {
+public abstract class Property extends BaseEntity {
 
     // -----------------------------------------------------------------------------------------------------------------
     public static final String TABLE_NAME = "PROPERTY";
@@ -42,7 +42,12 @@ public abstract class Property extends Base {
 
     public static final int SIZE_MAX_KEY = 255;
 
+
     // -----------------------------------------------------------------------------------------------------------------
+
+    /**
+     * Creates a new instance.
+     */
     public Property() {
         super();
     }

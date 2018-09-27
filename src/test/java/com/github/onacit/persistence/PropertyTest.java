@@ -2,7 +2,7 @@ package com.github.onacit.persistence;
 
 import java.util.UUID;
 
-public abstract class PropertyTest<T extends Property> extends BaseTest<T> {
+public abstract class PropertyTest<T extends Property> extends BaseEntityTest<T> {
 
     // -----------------------------------------------------------------------------------------------------------------
     public PropertyTest(final Class<T> propertyClass) {

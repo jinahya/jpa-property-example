@@ -1,15 +1,15 @@
 package com.github.onacit.persistence;
 
-public class FooTest extends BaseTest<Foo> {
+class OFooTest extends BaseEntityTest<OFoo> {
 
     // -----------------------------------------------------------------------------------------------------------------
-    public FooTest() {
-        super(Foo.class);
+    OFooTest() {
+        super(OFoo.class);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
     @Override
-    Foo entityInstance() {
+    OFoo entityInstance() {
         return super.entityInstance();
     }
 }

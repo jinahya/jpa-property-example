@@ -4,8 +4,8 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = Bar.TABLE_NAME)
-public class Bar extends Base {
+@Table(name = OBar.TABLE_NAME)
+public class OBar extends BaseEntity {
 
     public static final String TABLE_NAME = "BAR";
 }
