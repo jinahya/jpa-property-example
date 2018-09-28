@@ -35,7 +35,9 @@ public abstract class OwnedProperty<T extends BaseEntity> extends Property {
         final CriteriaQuery<T> criteria = builder.createQuery(entityClass);
         final Root<T> root = criteria.from(entityClass);
         criteria.select(root);
-        criteria.where(builder.equal(root.get(OwnedProperty_.owner).get(BaseEntity_.id), ownerId),
+//        criteria.where(builder.equal(root.get(OwnedProperty_.owner).get(BaseEntity_.id), ownerId),
+//                       builder.equal(root.get(Property_.key), propertyKey));
+        criteria.where(builder.equal(root.get(ATTRIBUTE_NAME_OWNER).get(ATTRIBUTE_NAME_ID), ownerId),
                        builder.equal(root.get(Property_.key), propertyKey));
         final TypedQuery<T> typed = entityManager.createQuery(criteria);
         try {

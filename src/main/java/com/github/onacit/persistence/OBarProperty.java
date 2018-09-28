@@ -10,7 +10,8 @@ import static com.github.onacit.persistence.OwnedProperty.ATTRIBUTE_NAME_OWNER;
 
 @Entity
 @DiscriminatorValue(OBarProperty.DISCRIMINATOR_VALUE)
-@AssociationOverride(name = ATTRIBUTE_NAME_OWNER, joinColumns = @JoinColumn(name = COLUMN_NAME_BAR_ID, updatable = false))
+@AssociationOverride(name = ATTRIBUTE_NAME_OWNER,
+                     joinColumns = @JoinColumn(name = COLUMN_NAME_BAR_ID, updatable = false))
 public class OBarProperty extends OwnedProperty<OBar> {
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -23,4 +24,13 @@ public class OBarProperty extends OwnedProperty<OBar> {
     public OBarProperty() {
         super(OBar.class);
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
+//    @NotNull
+//    @ManyToOne
+//    @JoinColumn(name = COLUMN_NAME_BAR_ID, updatable = false)
+//    @Override
+//    public OBar getOwner() {
+//        return super.getOwner();
+//    }
 }

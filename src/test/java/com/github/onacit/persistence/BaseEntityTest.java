@@ -7,6 +7,9 @@ import org.slf4j.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceException;
+import javax.persistence.metamodel.EntityType;
+import javax.persistence.metamodel.ManagedType;
+import javax.persistence.metamodel.Metamodel;
 import java.lang.reflect.Constructor;
 import java.util.function.*;
 
@@ -31,6 +34,15 @@ public abstract class BaseEntityTest<T extends BaseEntity> {
         try {
             PERSISTENCE_UNIT = createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
             logger.info("persistence unit created: {}", PERSISTENCE_UNIT);
+            final Metamodel metamodel = PERSISTENCE_UNIT.getMetamodel();
+            for (final ManagedType<?> managedType : metamodel.getManagedTypes()) {
+                logger.debug("managedType: {}", managedType);
+                managedType.getAttributes().forEach(a -> logger.debug("\tattribute: {}", a));
+            }
+            for (final EntityType<?> entityType : metamodel.getEntities()) {
+                logger.debug("entityType: {}", entityType);
+                entityType.getAttributes().forEach(a -> logger.debug("\tattribute: {}", a));
+            }
         } catch (final Exception e) {
             e.printStackTrace();
             throw new InstantiationError(e.getMessage());
@@ -106,7 +118,7 @@ public abstract class BaseEntityTest<T extends BaseEntity> {
         if (entityFinder == null) {
             throw new NullPointerException("entityFinder is null");
         }
-        for (T entityInstance; true;) {
+        for (T entityInstance; true; ) {
             entityInstance = entitySupplier.get();
             try {
                 entityManager.persist(entityInstance);

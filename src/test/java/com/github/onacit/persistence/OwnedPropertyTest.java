@@ -4,9 +4,12 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 
 import java.lang.reflect.Method;
+import java.util.Optional;
 
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.Objects.requireNonNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public abstract class OwnedPropertyTest<T extends OwnedProperty<U>, U extends BaseEntity> extends PropertyTest<T> {
@@ -52,15 +55,15 @@ public abstract class OwnedPropertyTest<T extends OwnedProperty<U>, U extends Ba
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-//    Optional<T> findInstance(final String key, final U owner) {
-//        return applyPersistenceContext(m -> OwnedProperty.find(entityClass, m, key, ownerMapper, owner));
-//    }
+    Optional<T> findInstance(final String key, final U owner) {
+        return applyPersistenceContext(m -> OwnedProperty.find(entityClass, m, key, owner));
+    }
 
-//    T persistInstance() {
-//        return applyPersistenceContext(entityManager -> persistInstance(
-//                entityClass, () -> entityManager, this::entityInstance,
-//                (m, e) -> findInstance(e.getKey(), e.getOwner()).isPresent()));
-//    }
+    T persistInstance() {
+        return applyPersistenceContext(entityManager -> persistInstance(
+                entityClass, () -> entityManager, this::entityInstance,
+                (m, e) -> findInstance(e.getKey(), e.getOwner()).isPresent()));
+    }
 //
 //    boolean updateInstance(final String value, final String key, final U owner) {
 //        return applyPersistenceContext(m -> OwnedProperty.update(entityClass, m, value, key, ownerMapper, owner));
@@ -80,16 +83,16 @@ public abstract class OwnedPropertyTest<T extends OwnedProperty<U>, U extends Ba
         });
         logger.debug("persisted: {}", persisted);
     }
-//
-//    @Test
-//    void testPersistAndFind() {
-//        final T persisted = persistInstance();
-//        final T found = findInstance(persisted.getKey(), persisted.getOwner()).orElse(null);
-//        assertNotNull(found);
-//        assertEquals(persisted.getId(), found.getId());
-//        assertEquals(persisted.getKey(), found.getKey());
-//        assertEquals(persisted.getValue(), found.getValue());
-//    }
+
+    @Test
+    void testPersistAndFind() {
+        final T persisted = persistInstance();
+        final T found = findInstance(persisted.getKey(), persisted.getOwner()).orElse(null);
+        assertNotNull(found);
+        assertEquals(persisted.getId(), found.getId());
+        assertEquals(persisted.getKey(), found.getKey());
+        assertEquals(persisted.getValue(), found.getValue());
+    }
 //
 //    @Test
 //    void testPersistAndUpdate() {

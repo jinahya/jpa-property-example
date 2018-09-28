@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -235,8 +236,8 @@
       <properties>
         <jdbc.driver>org.h2.Driver</jdbc.driver>
         <jdbc.url>jdbc:h2:mem:test</jdbc.url>
-        <jdbc.user />
-        <jdbc.password />
+        <jdbc.user/>
+        <jdbc.password/>
       </properties>
       <dependencies>
         <dependency>
@@ -251,8 +252,8 @@
       <properties>
         <jdbc.driver>org.apache.derby.jdbc.EmbeddedDriver</jdbc.driver>
         <jdbc.url>jdbc:derby:memory:test;create=true</jdbc.url>
-        <jdbc.user />
-        <jdbc.password />
+        <jdbc.user/>
+        <jdbc.password/>
       </properties>
       <dependencies>
         <dependency>
@@ -267,8 +268,8 @@
       <properties>
         <jdbc.driver>org.hsqldb.jdbc.JDBCDriver</jdbc.driver>
         <jdbc.url>jdbc:hsqldb:mem:test</jdbc.url>
-        <jdbc.user />
-        <jdbc.password />
+        <jdbc.user/>
+        <jdbc.password/>
       </properties>
       <dependencies>
         <dependency>
