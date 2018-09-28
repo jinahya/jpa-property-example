@@ -4,19 +4,23 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import static com.github.onacit.persistence.Property.COLUMN_NAME_DTYPE;
+import static com.github.onacit.persistence.Property.COLUMN_NAME_KEY;
+
 @Entity
 @Table(name = Property.TABLE_NAME,
        indexes = {
-               @Index(columnList = Property.COLUMN_NAME_DTYPE + ", " + Property.COLUMN_NAME_KEY,
-                      name = "INDEXED_DTYPE_KEY"),
-               @Index(columnList = Property.COLUMN_NAME_DTYPE + ", " + OFooProperty.COLUMN_NAME_FOO_ID + ", "
-                       + Property.COLUMN_NAME_KEY, name = "INDEXED_DTYPE_FOO_ID_KEY"),
-               @Index(columnList = Property.COLUMN_NAME_DTYPE + ", " + OBarProperty.COLUMN_NAME_BAR_ID + ", "
-                       + Property.COLUMN_NAME_KEY, name = "INDEXED_DTYPE_BAR_ID_KEY")
+               @Index(columnList = COLUMN_NAME_DTYPE + ", " + Property.COLUMN_NAME_KEY, name = "INDEXED_DTYPE_KEY")
+       },
+       uniqueConstraints = {
+               @UniqueConstraint(columnNames = {COLUMN_NAME_DTYPE, OFooProperty.COLUMN_NAME_FOO_ID, COLUMN_NAME_KEY},
+                                 name = "UNIQUE_DTYPE_FOO_ID_KEY"),
+               @UniqueConstraint(columnNames = {COLUMN_NAME_DTYPE, OBarProperty.COLUMN_NAME_BAR_ID, COLUMN_NAME_KEY},
+                                 name = "UNIQUE_DTYPE_BAR_ID_KEY")
        }
 )
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = Property.COLUMN_NAME_DTYPE)
+@DiscriminatorColumn(name = COLUMN_NAME_DTYPE)
 public abstract class Property extends BaseEntity {
 
     // -----------------------------------------------------------------------------------------------------------------
