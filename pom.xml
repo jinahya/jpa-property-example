@@ -10,7 +10,7 @@
 
   <groupId>com.github.jinayya</groupId>
   <artifactId>jpa-property-example</artifactId>
-  <version>0.1.0</version>
+  <version>0.1.1-SNAPSHOT</version>
 
   <name>${project.artifactId}</name>
   <url>https://github.com/jinahya/jpa-property-example</url>
@@ -19,7 +19,7 @@
     <connection>scm:git:ssh://git@github.com:jinahya/jpa-property-example.git</connection>
     <developerConnection>scm:git:ssh://git@github.com:jinahya/jpa-property-example.git</developerConnection>
     <url>https://github.com/jinahya/jpa-property-example</url>
-    <tag>0.1.0</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <properties>
